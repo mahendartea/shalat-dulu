@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shalat Dulu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Main Screen -->
+    <div id="main-screen" class="screen active">
+      <header class="app-header">
+        <div class="location-badge" id="location-display">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span id="current-city">Mendeteksi Lokasi...</span>
+        </div>
+        <button class="icon-btn" id="btn-settings" title="Pengaturan">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </header>
+
+      <!-- Digital Clock & Countdown -->
+      <section class="clock-section">
+        <div id="digital-clock" class="time-display">00:00:00</div>
+        <div class="countdown-container">
+          <div id="countdown-label" class="countdown-label">Menghitung...</div>
+          <div id="countdown-timer" class="countdown-time">--:--:--</div>
+        </div>
+      </section>
+
+      <!-- Prayer Times Grid -->
+      <section class="prayer-times-section">
+        <div class="prayer-cards-container">
+          <div class="prayer-card" data-prayer="Imsak">
+            <span class="prayer-name">Imsak</span>
+            <span class="prayer-time" id="time-Imsak">--:--</span>
+          </div>
+          <div class="prayer-card" data-prayer="Subuh">
+            <span class="prayer-name">Subuh</span>
+            <span class="prayer-time" id="time-Subuh">--:--</span>
+          </div>
+          <div class="prayer-card" data-prayer="Zuhur">
+            <span class="prayer-name">Zuhur</span>
+            <span class="prayer-time" id="time-Zuhur">--:--</span>
+          </div>
+          <div class="prayer-card" data-prayer="Asar">
+            <span class="prayer-name">Asar</span>
+            <span class="prayer-time" id="time-Asar">--:--</span>
+          </div>
+          <div class="prayer-card" data-prayer="Maghrib">
+            <span class="prayer-name">Maghrib</span>
+            <span class="prayer-time" id="time-Maghrib">--:--</span>
+          </div>
+          <div class="prayer-card" data-prayer="Isya">
+            <span class="prayer-name">Isya</span>
+            <span class="prayer-time" id="time-Isya">--:--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mini Footer Bar -->
+      <footer class="app-footer">
+        <div class="footer-left" style="display: flex; gap: 8px;">
+          <button class="footer-btn" id="btn-toggle-sound" title="Aktifkan/Matikan Suara">
+            <svg id="sound-icon-on" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+            <svg id="sound-icon-off" class="hidden" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>
+            <span id="sound-status-text">Suara: On</span>
+          </button>
+
+          <button class="footer-btn" id="btn-toggle-widget" title="Tampilkan/Sembunyikan Widget Desktop">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            <span id="widget-status-text">Widget: Off</span>
+          </button>
+        </div>
+        <div class="footer-right">
+          <button class="icon-btn text-danger" id="btn-quit" title="Keluar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+      <header class="app-header">
+        <button class="icon-btn" id="btn-back-settings" title="Kembali">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </button>
+        <h2>Pengaturan</h2>
+        <div style="width: 16px;"></div> <!-- Spacer for header layout -->
+      </header>
+
+      <div class="settings-content">
+        <!-- Lokasi -->
+        <div class="settings-group">
+          <h3>Lokasi</h3>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="location-mode" value="auto" checked>
+              <span>Deteksi Otomatis (GeoIP)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="location-mode" value="manual">
+              <span>Manual</span>
+            </label>
+          </div>
+          
+          <div id="manual-location-inputs" class="hidden animate-fade" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="input-field">
+              <label for="select-api-source">Sumber Data API</label>
+              <select id="select-api-source">
+                <option value="equran">Indonesia (EQuran.id API)</option>
+                <option value="aladhan">Global (Aladhan API)</option>
+              </select>
+            </div>
+
+            <!-- EQuran inputs -->
+            <div id="equran-inputs" class="animate-fade" style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="input-field">
+                <label for="select-provinsi">Provinsi</label>
+                <select id="select-provinsi">
+                  <option value="">Memuat provinsi...</option>
+                </select>
+              </div>
+              <div class="input-field">
+                <label for="select-kabkota">Kabupaten / Kota</label>
+                <select id="select-kabkota">
+                  <option value="">Pilih provinsi terlebih dahulu</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Aladhan inputs -->
+            <div id="aladhan-inputs" class="hidden animate-fade" style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="input-field">
+                <label for="input-city">Kota</label>
+                <input type="text" id="input-city" placeholder="Contoh: Jakarta">
+              </div>
+              <div class="input-field">
+                <label for="input-country">Negara</label>
+                <input type="text" id="input-country" placeholder="Contoh: Indonesia">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Suara & Pengingat -->
+        <div class="settings-group">
+          <h3>Suara & Notifikasi</h3>
+          <div class="input-field">
+            <label for="select-sound-type">Tipe Alarm</label>
+            <select id="select-sound-type">
+              <option value="adzan">Adzan Lengkap</option>
+              <option value="chime">Nada Ringkas (Chime)</option>
+              <option value="none">Tanpa Suara (Notifikasi Saja)</option>
+            </select>
+          </div>
+          
+          <!-- Adzan file selector -->
+          <div id="adzan-selector-group" class="input-field animate-fade" style="margin-top: 8px;">
+            <label for="select-adzan-file">Pilihan Suara Adzan</label>
+            <select id="select-adzan-file">
+              <option value="Athan Alafasy.mp3">Misyari Rasyid Al-Afasy</option>
+              <option value="Adzan by Salman Al-Utaybi.mp3">Salman Al-Utaybi</option>
+            </select>
+          </div>
+          
+          <div class="action-buttons-row">
+            <button class="secondary-btn" id="btn-test-notification">Test Notifikasi</button>
+            <button class="secondary-btn" id="btn-test-sound">Test Suara</button>
+          </div>
+        </div>
+
+        <!-- Dev tools and credits -->
+        <div class="settings-group utility-group">
+          <h3>Sistem</h3>
+          <button class="link-btn" id="btn-dev-tools">Open Developer Tools</button>
+          <div class="credits">
+            <span>Shalat Dulu v1.0.0</span>
+            <span>Made with ❤️ for macOS</span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="app-footer">
+        <button class="primary-btn" id="btn-save-settings">Simpan Pengaturan</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Audio elements -->
+  <audio id="audio-adzan" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-84.wav" preload="auto"></audio> <!-- We will also play a synthetic chime in script -->
+
+  <script src="renderer.js"></script>
+</body>
+</html>
