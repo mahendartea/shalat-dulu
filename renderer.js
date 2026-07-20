@@ -51,6 +51,7 @@ const doaNama = document.getElementById('doa-nama');
 const doaArab = document.getElementById('doa-arab');
 const doaLatin = document.getElementById('doa-latin');
 const doaArti = document.getElementById('doa-arti');
+const chkAutostart = document.getElementById('chk-autostart');
 
 // Application State
 let appSettings = {
@@ -135,6 +136,15 @@ function loadSettings() {
   updateAdzanSelectorVisibility();
   
   updateSoundButtonUI();
+
+  // Load autostart setting from native macOS settings
+  if (window.electronAPI && chkAutostart) {
+    window.electronAPI.getAutostart().then(enabled => {
+      chkAutostart.checked = enabled;
+    }).catch(err => {
+      console.error('Gagal mendapatkan pengaturan autostart:', err);
+    });
+  }
 }
 
 function updateApiSourceInputsVisibility() {
@@ -242,6 +252,13 @@ function saveSettings() {
 
   localStorage.setItem('shalat-dulu-settings', JSON.stringify(appSettings));
   
+  // Save autostart setting natively to macOS
+  if (window.electronAPI && chkAutostart) {
+    window.electronAPI.setAutostart(chkAutostart.checked).catch(err => {
+      console.error('Gagal memperbarui pengaturan autostart:', err);
+    });
+  }
+
   // Reload prayer times
   fetchPrayerTimes();
   

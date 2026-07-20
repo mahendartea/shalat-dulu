@@ -177,3 +177,15 @@ ipcMain.on('toggle-widget', (event, makeVisible) => {
 ipcMain.handle('is-widget-open', () => {
   return widgetWindow !== null;
 });
+
+ipcMain.handle('get-autostart', () => {
+  return app.getLoginItemSettings().openAtLogin;
+});
+
+ipcMain.handle('set-autostart', (event, enable) => {
+  app.setLoginItemSettings({
+    openAtLogin: enable,
+    openAsHidden: true
+  });
+  return app.getLoginItemSettings().openAtLogin;
+});

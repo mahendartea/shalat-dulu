@@ -21,6 +21,7 @@
    - Notifikasi macOS bawaan ketika waktu shalat tiba.
    - Pilihan alarm suara: **Adzan Lengkap** (dilengkapi pilihan suara Syekh Misyari Rasyid Al-Afasy atau Salman Al-Utaybi), **Nada Ringkas (Chime)**, atau mode **Hening (Notifikasi Saja)**.
 7. **Deteksi Lokasi Otomatis**: Secara default menggunakan GeoIP untuk mendeteksi lokasi terkini Anda secara instan.
+8. **Autostart (Jalankan saat macOS Dinyalakan)**: Opsi untuk menjalankan aplikasi secara otomatis saat Mac Anda dihidupkan (launch at login). Dijalankan secara tersembunyi (hidden) di Menu Bar untuk kenyamanan maksimal.
 
 ---
 

@@ -12,5 +12,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     return () => {
       ipcRenderer.removeListener('widget-status-changed', subscription);
     };
-  }
+  },
+  getAutostart: () => ipcRenderer.invoke('get-autostart'),
+  setAutostart: (enable) => ipcRenderer.invoke('set-autostart', enable)
 });
