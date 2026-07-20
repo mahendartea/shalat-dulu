@@ -505,3 +505,114 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Doa Card Styling */
+.doa-container {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doa-section-title {
+  font-family: var(--font-accent);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.doa-card {
+  background: var(--bg-card-glass);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: var(--transition-smooth);
+}
+
+.doa-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.doa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.doa-grup {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #0A84FF;
+  letter-spacing: 0.8px;
+}
+
+.doa-nama {
+  font-family: var(--font-accent);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 1px;
+}
+
+.doa-arab {
+  font-family: 'Scheherazade New', 'Amiri', 'Traditional Arabic', 'Segoe UI Arabic', sans-serif;
+  font-size: 20px;
+  line-height: 1.8;
+  text-align: right;
+  direction: rtl;
+  color: #FFFFFF;
+  margin: 8px 0;
+  word-spacing: 2px;
+  -webkit-user-select: text; /* Allow user to select/copy Arabic text */
+}
+
+.doa-latin {
+  font-size: 11px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  -webkit-user-select: text;
+}
+
+.doa-arti {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+  margin-top: 4px;
+  -webkit-user-select: text;
+}
+
+/* Smooth fade out/in effect for card content rotation */
+.doa-card-content-fade {
+  animation: contentFade 0.3s ease-in-out;
+}
+
+@keyframes contentFade {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

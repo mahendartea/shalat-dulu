@@ -44,6 +44,14 @@ const selectAdzanFile = document.getElementById('select-adzan-file');
 const adzanSelectorGroup = document.getElementById('adzan-selector-group');
 const audioAdzan = document.getElementById('audio-adzan');
 
+// Doa Harian Elements
+const btnRefreshDoa = document.getElementById('btn-refresh-doa');
+const doaGrup = document.getElementById('doa-grup');
+const doaNama = document.getElementById('doa-nama');
+const doaArab = document.getElementById('doa-arab');
+const doaLatin = document.getElementById('doa-latin');
+const doaArti = document.getElementById('doa-arti');
+
 // Application State
 let appSettings = {
   locationMode: 'manual',
@@ -61,6 +69,7 @@ let prayerTimings = {};
 let activeLocation = { city: '', country: '' };
 let nextPrayer = null;
 let currentNotification = null;
+let doaList = []; // Array to store all doas from API
 
 // Cache for EQuran API lists
 let provincesList = [];
@@ -75,6 +84,9 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // Background load provinces list for quick settings switch
   preloadProvinces();
+
+  // Background load random daily du'a list
+  fetchDoaList();
 });
 
 // 2. Settings Management
@@ -690,5 +702,86 @@ function setupEventListeners() {
     window.electronAPI.isWidgetOpen().then((isOpen) => {
       widgetStatusText.innerText = isOpen ? 'Widget: On' : 'Widget: Off';
     });
+  }
+
+  // Refresh Doa
+  if (btnRefreshDoa) {
+    btnRefreshDoa.addEventListener('click', () => {
+      rotateRandomDoa();
+    });
+  }
+}
+
+// 8. Doa Harian (Daily Du'a) Integrations
+async function fetchDoaList() {
+  if (doaGrup) {
+    doaNama.innerText = 'Memuat doa...';
+    doaArab.innerText = '';
+    doaLatin.innerText = '';
+    doaArti.innerText = '';
+  }
+
+  try {
+    const response = await fetch('https://equran.id/api/doa');
+    if (!response.ok) throw new Error('API request failed');
+    const resData = await response.json();
+    if (resData.status === 'success' && Array.isArray(resData.data)) {
+      doaList = resData.data;
+      displayRandomDoa();
+    } else {
+      throw new Error('Invalid response structure');
+    }
+  } catch (err) {
+    console.error('Gagal mengambil daftar doa:', err);
+    if (doaNama) {
+      doaNama.innerHTML = '<span class="text-danger">Gagal Memuat Doa</span>';
+      doaArti.innerHTML = 'Pastikan perangkat terhubung ke internet. <a href="#" id="retry-fetch-doa" style="color: #0A84FF; text-decoration: none; font-weight: 600;">Coba Lagi</a>';
+      
+      const retryBtn = document.getElementById('retry-fetch-doa');
+      if (retryBtn) {
+        retryBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          fetchDoaList();
+        });
+      }
+    }
+  }
+}
+
+function displayRandomDoa() {
+  if (!doaList || doaList.length === 0) return;
+  
+  const randomIndex = Math.floor(Math.random() * doaList.length);
+  const selectedDoa = doaList[randomIndex];
+  
+  if (doaGrup) doaGrup.innerText = selectedDoa.grup || 'Doa Harian';
+  if (doaNama) doaNama.innerText = selectedDoa.nama || '';
+  if (doaArab) doaArab.innerText = selectedDoa.ar || '';
+  if (doaLatin) doaLatin.innerText = selectedDoa.tr || '';
+  if (doaArti) doaArti.innerText = selectedDoa.idn || '';
+}
+
+function rotateRandomDoa() {
+  if (!doaList || doaList.length === 0) {
+    fetchDoaList();
+    return;
+  }
+
+  const doaCard = document.querySelector('.doa-card');
+  if (doaCard) {
+    // Add class to trigger animation
+    doaCard.classList.add('doa-card-content-fade');
+    
+    // Halfway through animation, swap content
+    setTimeout(() => {
+      displayRandomDoa();
+    }, 150);
+
+    // Remove animation class after animation completes
+    setTimeout(() => {
+      doaCard.classList.remove('doa-card-content-fade');
+    }, 300);
+  } else {
+    displayRandomDoa();
   }
 }
