@@ -28,7 +28,10 @@
       "target": [
         "dmg",
         "zip"
-      ]
+      ],
+      "extendInfo": {
+        "NSLocationWhenInUseUsageDescription": "Aplikasi memerlukan izin lokasi untuk mendeteksi koordinat Anda secara presisi guna menentukan jadwal shalat."
+      }
     },
     "directories": {
       "output": "dist"

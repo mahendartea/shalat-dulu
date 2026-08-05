@@ -342,9 +342,55 @@ async function fetchPrayerTimes() {
   }
 }
 
-// 5a. Auto-Location fetch (uses Aladhan as fallback/global helper)
+// 5a. Auto-Location fetch (uses HTML5 Geolocation API with GeoIP fallback)
 async function fetchPrayerTimesAuto() {
-  let city = 'Jakarta';
+  currentCityEl.innerText = 'Mendeteksi...';
+  
+  if ("geolocation" in navigator) {
+    const getPosition = (options) => {
+      return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+      });
+    };
+
+    try {
+      // 5 seconds timeout for GPS/WiFi geolocation
+      const position = await getPosition({ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 });
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Reverse geocoding to get City & Country name
+      let city = 'Lokasi Terdeteksi';
+      let country = 'Indonesia';
+      
+      try {
+        const reverseResponse = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=id`);
+        if (reverseResponse.ok) {
+          const revData = await reverseResponse.json();
+          city = revData.city || revData.locality || revData.principalSubdivision || 'Lokasi Terdeteksi';
+          country = revData.countryName || 'Indonesia';
+        }
+      } catch (revErr) {
+        console.warn('Gagal memproses reverse geocoding, menggunakan koordinat:', revErr);
+        city = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      }
+
+      activeLocation = { city, country };
+      currentCityEl.innerText = `${city}, ${country}`;
+
+      await fetchPrayerTimesAladhanByCoords(lat, lng, country);
+      return; // Success
+    } catch (geoErr) {
+      console.warn('Izin lokasi ditolak atau gagal memuat GPS, menggunakan GeoIP fallback:', geoErr);
+    }
+  }
+
+  // Fallback to GeoIP
+  await fetchPrayerTimesAutoGeoIPFallback();
+}
+
+async function fetchPrayerTimesAutoGeoIPFallback() {
+  let city = 'Banda Aceh';
   let country = 'Indonesia';
 
   try {
@@ -357,11 +403,11 @@ async function fetchPrayerTimesAuto() {
       }
     }
   } catch (geoErr) {
-    console.warn('Gagal mendeteksi lokasi otomatis, menggunakan manual fallback:', geoErr);
+    console.warn('Gagal mendeteksi lokasi via GeoIP:', geoErr);
   }
 
   activeLocation = { city, country };
-  currentCityEl.innerText = `${city}, ${country}`;
+  currentCityEl.innerText = `${city}, ${country} (IP)`;
 
   await fetchPrayerTimesAladhan(city, country);
 }
@@ -451,6 +497,43 @@ async function fetchPrayerTimesAladhan(city, country) {
     determineNextPrayer();
   } else {
     throw new Error('Respons API Aladhan tidak valid');
+  }
+}
+
+// 5d. Aladhan API using Coordinates
+async function fetchPrayerTimesAladhanByCoords(lat, lng, country) {
+  const method = country.toLowerCase() === 'indonesia' ? 11 : 3;
+  const timestamp = Math.floor(Date.now() / 1000);
+  const url = `https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lng}&method=${method}`;
+  
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Aladhan Coordinates API Request failed');
+
+  const data = await response.json();
+  if (data.code === 200 && data.data && data.data.timings) {
+    const timings = data.data.timings;
+    prayerTimings = {
+      Imsak: timings.Imsak,
+      Subuh: timings.Fajr,
+      Zuhur: timings.Dhuhr,
+      Asar: timings.Asr,
+      Maghrib: timings.Maghrib,
+      Isya: timings.Isha
+    };
+
+    // Simpan jadwal dan lokasi ke localStorage untuk digunakan oleh widget
+    localStorage.setItem('shalat-dulu-timings', JSON.stringify(prayerTimings));
+    localStorage.setItem('shalat-dulu-active-location', JSON.stringify(activeLocation));
+
+    // Update times in the UI list
+    Object.keys(prayerTimings).forEach(prayer => {
+      const el = document.getElementById(`time-${prayer}`);
+      if (el) el.innerText = prayerTimings[prayer];
+    });
+
+    determineNextPrayer();
+  } else {
+    throw new Error('Respons API Aladhan Koordinat tidak valid');
   }
 }
 
